@@ -10,6 +10,7 @@
 -->
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  // eslint-disable-line @typescript-eslint/no-unused-vars
   import SessionRow from '../components/SessionRow.svelte';
   import Scorecard from '../components/Scorecard.svelte';
   import BandDot from '../components/BandDot.svelte';
@@ -24,12 +25,27 @@
   let store = $state<SessionStore | null>(null);
   let selectedUuid = $state<string | null>(null);
   let connectError = $state<string | null>(null);
+  let reconnectAttempt = $state(0);
+  let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
   const selected = $derived(
     store?.sessions.find((s) => s.uuid === selectedUuid) ?? null,
   );
 
+  async function connectFresh() {
+    return onMountInner();
+  }
+
   onMount(async () => {
+    await onMountInner();
+  });
+
+  onDestroy(() => {
+    if (reconnectTimer) clearTimeout(reconnectTimer);
+    void store?.close();
+  });
+
+  async function onMountInner() {
     const cfg = loadConfig();
     await initObservability();
     const bootSpan = startSpan('dashboard.bootstrap');
@@ -66,6 +82,25 @@
       if (s.sessions.length > 0) selectedUuid = s.sessions[0]!.uuid;
       bootSpan.setAttribute('transport.kind', transport.kind);
       bootSpan.setAttribute('sessions.count', s.sessions.length);
+      // Reconnect watcher — when transport drops, schedule a fresh
+      // bootstrap with exponential backoff (1s → 30s cap). Mirrors the
+      // iOS DashboardView@e04be63 + Android RootView@34e29a9 loops.
+      const checkDropped = () => {
+        if (store?.transportState === 'closed') {
+          const delayMs = Math.min(30_000, Math.pow(2, reconnectAttempt) * 1000);
+          reconnectAttempt += 1;
+          store = null;
+          reconnectTimer = setTimeout(() => {
+            void connectFresh();
+          }, delayMs);
+        } else if (store?.transportState === 'open') {
+          reconnectAttempt = 0;
+          reconnectTimer = setTimeout(checkDropped, 5000);
+        } else {
+          reconnectTimer = setTimeout(checkDropped, 1000);
+        }
+      };
+      checkDropped();
     } catch (err) {
       connectError = (err as Error).message;
       captureException(err);

@@ -12,6 +12,7 @@
   import { onMount, onDestroy } from 'svelte';
   import SessionRow from '../components/SessionRow.svelte';
   import Scorecard from '../components/Scorecard.svelte';
+  import Sparkline from '../components/Sparkline.svelte';
   import BandDot from '../components/BandDot.svelte';
   import ShortcutFooter from '../components/ShortcutFooter.svelte';
   import { newTransport } from '../protocol/transport';
@@ -193,12 +194,44 @@
         </header>
 
         {#if selected.last_scorecard}
-          <Scorecard
-            G={selected.last_scorecard.G}
-            V={selected.last_scorecard.V}
-            F={selected.last_scorecard.F}
-            E={selected.last_scorecard.E}
-          />
+          {@const sc = selected.last_scorecard}
+          <Scorecard G={sc.G} V={sc.V} F={sc.F} E={sc.E} />
+          {@const verdictsForSel = store.verdicts.filter(
+            (v) => v.session_uuid === selected.uuid,
+          )}
+          {#if verdictsForSel.length > 0}
+            <div class="trend-card">
+              <span class="trend-title">trend</span>
+              <div class="trend-row">
+                <span class="axis">G</span>
+                <Sparkline
+                  values={verdictsForSel.map((v) => v.scorecard?.G ?? 0)}
+                  current={sc.G}
+                />
+              </div>
+              <div class="trend-row">
+                <span class="axis">V</span>
+                <Sparkline
+                  values={verdictsForSel.map((v) => v.scorecard?.V ?? 0)}
+                  current={sc.V}
+                />
+              </div>
+              <div class="trend-row">
+                <span class="axis">F</span>
+                <Sparkline
+                  values={verdictsForSel.map((v) => v.scorecard?.F ?? 0)}
+                  current={sc.F}
+                />
+              </div>
+              <div class="trend-row">
+                <span class="axis">E</span>
+                <Sparkline
+                  values={verdictsForSel.map((v) => v.scorecard?.E ?? 0)}
+                  current={sc.E}
+                />
+              </div>
+            </div>
+          {/if}
         {/if}
 
         <div class="cmd-bar">
@@ -287,6 +320,30 @@
     margin: var(--space-6) 0 var(--space-2);
     font-size: var(--fs-base);
     color: var(--c-title);
+  }
+  .trend-card {
+    border: 1px solid var(--c-border);
+    padding: var(--space-3);
+    margin-top: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .trend-title {
+    color: var(--c-title);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    margin-bottom: var(--space-1);
+  }
+  .trend-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .trend-row .axis {
+    color: var(--c-title);
+    font-weight: var(--fw-bold);
+    width: 1.5ch;
   }
   .log {
     background: var(--c-background);

@@ -19,6 +19,7 @@
   import { SessionStore } from '../lib/session-store';
   import { getValidAccessToken } from '../auth/auth';
   import { loadConfig } from '../lib/config';
+  import { initObservability, captureException, startSpan } from '../lib/observability';
 
   let store = $state<SessionStore | null>(null);
   let selectedUuid = $state<string | null>(null);
@@ -30,6 +31,8 @@
 
   onMount(async () => {
     const cfg = loadConfig();
+    await initObservability();
+    const bootSpan = startSpan('dashboard.bootstrap');
     const authToken = await getValidAccessToken({
       idpBaseUrl: cfg.idpBaseUrl,
       clientId: cfg.clientId,
@@ -61,8 +64,13 @@
       await s.connect();
       // Auto-select the first session.
       if (s.sessions.length > 0) selectedUuid = s.sessions[0]!.uuid;
+      bootSpan.setAttribute('transport.kind', transport.kind);
+      bootSpan.setAttribute('sessions.count', s.sessions.length);
     } catch (err) {
       connectError = (err as Error).message;
+      captureException(err);
+    } finally {
+      bootSpan.end();
     }
   });
 

@@ -19,6 +19,10 @@ export interface ChepherdRuntimeConfig {
   iceServers: RTCIceServer[];
   /** Default transport mode. */
   defaultMode: 'p2p' | 'relayed' | 'auto';
+  /** Optional Sentry DSN — public-safe. */
+  sentryDsn?: string;
+  /** Optional OTel collector HTTP endpoint — public-safe. */
+  otelEndpoint?: string;
 }
 
 declare global {

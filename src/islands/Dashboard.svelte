@@ -10,7 +10,6 @@
 -->
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  // eslint-disable-line @typescript-eslint/no-unused-vars
   import SessionRow from '../components/SessionRow.svelte';
   import Scorecard from '../components/Scorecard.svelte';
   import BandDot from '../components/BandDot.svelte';
@@ -107,11 +106,7 @@
     } finally {
       bootSpan.end();
     }
-  });
-
-  onDestroy(() => {
-    void store?.close();
-  });
+  }
 
   function parseBastionFromJwt(jwt: string): string | null {
     try {

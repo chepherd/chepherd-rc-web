@@ -141,6 +141,9 @@
                 session={session}
                 selected={session.uuid === selectedUuid}
                 onSelect={handleSelect}
+                verdictHistory={store.verdicts.filter(
+                  (v) => v.session_uuid === session.uuid,
+                )}
               />
             </li>
           {/each}

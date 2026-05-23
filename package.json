@@ -1,10 +1,10 @@
 {
   "name": "chepherd-rc-web",
-  "version": "0.0.1-dev",
+  "version": "0.2.0-rc3",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "Web client for chepherd-rc — privacy-preserving remote control via WebRTC DataChannel.",
+  "description": "Web client for chepherd-rc \u2014 privacy-preserving remote control via WebRTC DataChannel.",
   "homepage": "https://chepherd.org",
   "repository": {
     "type": "git",

@@ -3,15 +3,18 @@
   See docs/DESIGN-SYSTEM.md §9.1.
 -->
 <script lang="ts">
-  import type { SessionState } from '../protocol/payloads';
+  import type { SessionState, VerdictPayload } from '../protocol/payloads';
   import BandDot from './BandDot.svelte';
+  import HistoryStrip from './HistoryStrip.svelte';
 
   interface Props {
     session: SessionState;
     selected?: boolean;
     onSelect?: (uuid: string) => void;
+    /** Per-session verdict history; latest is last. Empty if no history. */
+    verdictHistory?: VerdictPayload[];
   }
-  const { session, selected = false, onSelect }: Props = $props();
+  const { session, selected = false, onSelect, verdictHistory = [] }: Props = $props();
 
   function fmtNextTick(iso?: string): string {
     if (!iso) return '—';
@@ -48,13 +51,14 @@
   <span class="verdict" style="color: var(--c-{verdictColor});">
     {session.last_verdict ?? '—'}
   </span>
+  <HistoryStrip verdicts={verdictHistory} />
   <span class="next">→ {fmtNextTick(session.next_tick_at)}</span>
 </button>
 
 <style>
   .row {
     display: grid;
-    grid-template-columns: auto 1fr 1fr auto auto auto;
+    grid-template-columns: auto 1fr 1fr auto auto auto auto;
     align-items: center;
     column-gap: var(--space-3);
     padding: var(--space-2) var(--space-3);

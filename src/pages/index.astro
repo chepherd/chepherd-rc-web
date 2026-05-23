@@ -1,0 +1,34 @@
+---
+import Shell from '../layouts/Shell.astro';
+import SignInButton from '../islands/SignInButton.svelte';
+---
+
+<Shell title="sign in">
+  <section class="pane hero">
+    <h1 class="pane-title">sign in</h1>
+    <p class="pitch">
+      chepherd watches your sessions. Sign in to your OpenOva identity to view live agent state, scorecards, and intervene from any device.
+    </p>
+    <SignInButton client:load />
+    <p class="footnote">
+      chepherd-rc encrypts every byte. By default the daemon and your browser talk peer-to-peer via WebRTC DataChannel — relay only sees signaling. Your data is your data.
+    </p>
+  </section>
+</Shell>
+
+<style>
+  .hero {
+    max-width: 560px;
+    margin: var(--space-12) auto;
+  }
+  .pitch {
+    margin: var(--space-3) 0 var(--space-6);
+    color: var(--c-body);
+    line-height: 1.6;
+  }
+  .footnote {
+    margin-top: var(--space-6);
+    color: var(--c-timestamp);
+    font-size: var(--fs-sm);
+  }
+</style>

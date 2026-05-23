@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'chepherd-rc — remote control for parallel AI coding agents.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content={description} />
+    <title>{title} — chepherd</title>
+    <link rel="icon" type="image/svg+xml" href="/app/favicon.svg" />
+  </head>
+  <body>
+    <header class="shell-header">
+      <a class="brand" href="/app/">chepherd</a>
+      <span class="env-tag">rc</span>
+    </header>
+    <main class="shell-main">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style>
+  .shell-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .env-tag {
+    color: var(--c-body);
+    font-size: var(--fs-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .shell-main {
+    padding: var(--space-6);
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+</style>

@@ -1,0 +1,105 @@
+/*
+ * chepherd design tokens — CSS custom properties.
+ *
+ * Source of truth: docs/DESIGN-SYSTEM.md in the chepherd repo.
+ * Mirror of: github.com/chepherd/chepherd/internal/style/palette.go.
+ *
+ * Any drift between this file and the design system doc is a design bug.
+ */
+
+:root {
+  /* §2.1 Body */
+  --c-body: #5f9ea0;
+  --c-primary: #ffffff;
+  --c-background: #000000;
+
+  /* §2.2 Brand */
+  --c-logo: #ffa500;
+
+  /* §2.3 Frame chrome */
+  --c-title: #00ffff;
+  --c-title-rule: #87cefa;
+  --c-border: #1e90ff;
+  --c-border-focus: #87cefa;
+
+  /* §2.4 Menu / footer */
+  --c-key-letter: #1e90ff;
+  --c-key-desc: #ffffff;
+  --c-key-numeric: #ff00ff;
+
+  /* §2.5 Breadcrumbs */
+  --c-crumb-fg: #000000;
+  --c-crumb-bg: #4682b4;
+  --c-crumb-active: #ffa500;
+
+  /* §2.6 Trust bands */
+  --c-band-trusted: #adff2f;
+  --c-band-standard: #5f9ea0;
+  --c-band-concerned: #ff8c00;
+  --c-band-crisis: #ff4500;
+  --c-band-paused: #778899;
+
+  /* §2.7 Verdict */
+  --c-verdict-silent: #5f9ea0;
+  --c-verdict-praise: #adff2f;
+  --c-verdict-coach: #ff8c00;
+  --c-verdict-intervene: #ff4500;
+
+  /* §2.8 Special events */
+  --c-injected: #9370db;
+  --c-escalating: #ffefd5;
+  --c-api-error: #ff4500;
+  --c-adopted: #00ced1;
+
+  /* §2.9 Metrics + refs */
+  --c-metric: #ffefd5;
+  --c-issue-ref: #4682b4;
+  --c-marked: #b8860b;
+  --c-timestamp: #778899;
+
+  /* §3.2 Type scale */
+  --fs-xs: 11px;
+  --fs-sm: 13px;
+  --fs-base: 16px;
+  --fs-lg: 20px;
+  --fs-xl: 24px;
+  --fs-2xl: 32px;
+  --fs-3xl: 48px;
+
+  /* §3.3 Weights */
+  --fw-normal: 400;
+  --fw-bold: 700;
+
+  /* §3.1 Stack */
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  /* §4 Spacing */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* §6.1 Motion durations */
+  --motion-instant: 0ms;
+  --motion-quick: 100ms;
+  --motion-normal: 200ms;
+  --motion-slow: 400ms;
+
+  /* §6.2 Easings */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-quick: 0ms;
+    --motion-normal: 0ms;
+    --motion-slow: 0ms;
+  }
+}

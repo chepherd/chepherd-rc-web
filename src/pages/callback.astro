@@ -1,0 +1,18 @@
+---
+import Shell from '../layouts/Shell.astro';
+import CallbackHandler from '../islands/CallbackHandler.svelte';
+---
+
+<Shell title="completing sign-in">
+  <section class="pane">
+    <h1 class="pane-title">completing sign-in</h1>
+    <CallbackHandler client:load />
+  </section>
+</Shell>
+
+<style>
+  section {
+    max-width: 560px;
+    margin: var(--space-12) auto;
+  }
+</style>

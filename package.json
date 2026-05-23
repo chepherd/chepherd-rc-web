@@ -1,0 +1,42 @@
+{
+  "name": "chepherd-rc-web",
+  "version": "0.0.1-dev",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Web client for chepherd-rc — privacy-preserving remote control via WebRTC DataChannel.",
+  "homepage": "https://chepherd.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chepherd/chepherd-rc-web.git"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "svelte": "^5.0.0",
+    "@astrojs/svelte": "^7.0.0",
+    "@astrojs/check": "^0.9.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.10.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.0",
+    "prettier-plugin-astro": "^0.14.0",
+    "prettier-plugin-svelte": "^3.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

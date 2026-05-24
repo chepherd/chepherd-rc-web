@@ -1,5 +1,8 @@
 # chepherd-rc-web
 
+[![web-build](https://github.com/chepherd/chepherd-rc-web/actions/workflows/web-build.yml/badge.svg)](https://github.com/chepherd/chepherd-rc-web/actions/workflows/web-build.yml)
+[![release](https://img.shields.io/github/v/tag/chepherd/chepherd-rc-web?label=release&sort=semver)](https://github.com/chepherd/chepherd-rc-web/releases)
+
 Browser client for [chepherd-rc](https://chepherd.org) — drive your chepherd dashboard from any browser, privacy-preserving by default.
 
 ## What it does

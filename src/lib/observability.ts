@@ -98,13 +98,14 @@ function getBuildVersion(): string {
 
 async function loadSentry(cfg: ObsConfig): Promise<void> {
   try {
-    // Dynamic import so Sentry doesn't bloat first-paint when DSN absent.
-    // Optional SDK — not in dependencies; tsc + astro-check skip the
-    // resolution path via @ts-expect-error since the import is gated
-    // on cfg.sentryDsn being present at runtime.
-    // @ts-expect-error optional peer dep loaded lazily
+    // Optional SDK — not in dependencies. We assign the module name to
+    // a runtime variable so Rollup's static analysis can't resolve it
+    // at build time + skip the unresolvable-import warning. Caller
+    // gates on cfg.sentryDsn so this branch only fires in deployments
+    // where the operator has installed the optional package.
+    const pkg = '@sentry/browser';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const Sentry = (await import(/* @vite-ignore */ '@sentry/browser')) as any;
+    const Sentry = (await import(/* @vite-ignore */ pkg)) as any;
     Sentry.init({
       dsn: cfg.sentryDsn,
       release: cfg.release,
@@ -138,21 +139,21 @@ async function loadSentry(cfg: ObsConfig): Promise<void> {
 
 async function loadOtel(cfg: ObsConfig): Promise<void> {
   try {
-    // Optional OTel SDKs — not in package dependencies. Loaded lazily
-    // only when cfg.otelEndpoint is set, so astro-check shouldn't fail
-    // on missing module resolution.
-    // @ts-expect-error optional peer dep loaded lazily
+    // Optional OTel SDKs — not in package dependencies. Runtime-var
+    // import path to escape Rollup's static analysis (same pattern as
+    // loadSentry). Only fires when cfg.otelEndpoint is set.
+    const sdkPkg = '@opentelemetry/sdk-trace-web';
+    const expPkg = '@opentelemetry/exporter-trace-otlp-http';
+    const resPkg = '@opentelemetry/resources';
+    const semPkg = '@opentelemetry/semantic-conventions';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sdk = (await import(/* @vite-ignore */ '@opentelemetry/sdk-trace-web')) as any;
-    // @ts-expect-error optional peer dep loaded lazily
+    const sdk = (await import(/* @vite-ignore */ sdkPkg)) as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const exp = (await import(/* @vite-ignore */ '@opentelemetry/exporter-trace-otlp-http')) as any;
-    // @ts-expect-error optional peer dep loaded lazily
+    const exp = (await import(/* @vite-ignore */ expPkg)) as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = (await import(/* @vite-ignore */ '@opentelemetry/resources')) as any;
-    // @ts-expect-error optional peer dep loaded lazily
+    const res = (await import(/* @vite-ignore */ resPkg)) as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sem = (await import(/* @vite-ignore */ '@opentelemetry/semantic-conventions')) as any;
+    const sem = (await import(/* @vite-ignore */ semPkg)) as any;
 
     const provider = new sdk.WebTracerProvider({
       resource: new res.Resource({

@@ -11,6 +11,12 @@ on:
   workflow_dispatch:
   pull_request:
 
+# Cancel prior in-flight runs on the same ref. Avoids parallel runs
+# during iterate-on-CI cycles.
+concurrency:
+  group: web-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   walk:
     runs-on: ubuntu-latest

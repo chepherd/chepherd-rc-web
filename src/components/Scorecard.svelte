@@ -3,12 +3,15 @@
   See docs/DESIGN-SYSTEM.md §9.2.
 -->
 <script lang="ts">
+  import Sparkline from './Sparkline.svelte';
+
   interface Props {
     G: number;
     V: number;
     F: number;
     E: number;
-    /** Optional historic series for sparklines (per axis). */
+    /** Optional historic series for sparklines (per axis). When present,
+     *  each row renders an inline Sparkline to the right of the gauge. */
     history?: {
       G?: number[];
       V?: number[];
@@ -55,6 +58,11 @@
       >
         {gaugeBar(row.value)}
       </span>
+      {#if row.series.length > 1}
+        <span class="inline-spark">
+          <Sparkline values={row.series} />
+        </span>
+      {/if}
     </div>
   {/each}
 </div>
@@ -68,9 +76,13 @@
   }
   .row {
     display: grid;
-    grid-template-columns: auto auto auto auto 1fr;
+    grid-template-columns: auto auto auto auto auto auto;
     column-gap: var(--space-2);
     align-items: baseline;
+  }
+  .inline-spark {
+    margin-left: var(--space-3);
+    opacity: 0.85;
   }
   .axis {
     font-weight: var(--fw-bold);

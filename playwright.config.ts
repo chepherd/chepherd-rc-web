@@ -33,12 +33,16 @@ export default defineConfig({
     { name: 'mobile-chrome', use: { ...devices['Pixel 7'] } },
     { name: 'mobile-safari', use: { ...devices['iPhone 14'] } },
   ],
-  webServer: process.env['PLAYWRIGHT_NO_SERVER']
-    ? undefined
+  ...(process.env['PLAYWRIGHT_NO_SERVER']
+    ? {}
     : {
-        command: IS_CI ? 'npm run build && npm run preview -- --port 4321' : 'npm run dev -- --port 4321',
-        url: BASE_URL,
-        reuseExistingServer: !IS_CI,
-        timeout: 120_000,
-      },
+        webServer: {
+          command: IS_CI
+            ? 'npm run build && npm run preview -- --port 4321'
+            : 'npm run dev -- --port 4321',
+          url: BASE_URL,
+          reuseExistingServer: !IS_CI,
+          timeout: 120_000,
+        },
+      }),
 });

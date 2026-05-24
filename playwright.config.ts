@@ -38,11 +38,15 @@ export default defineConfig({
     : {
         webServer: {
           command: IS_CI
-            ? 'npm run build && npm run preview -- --port 4321'
-            : 'npm run dev -- --port 4321',
-          url: BASE_URL,
+            ? 'npm run build && npm run preview -- --port 4321 --host'
+            : 'npm run dev -- --port 4321 --host',
+          // The astro.config.mjs uses base: '/app', so the root URL
+          // 404s — readiness polling MUST target the actual served
+          // path. Without the /app/ suffix the webServer wait fails
+          // and Playwright times out after 120s.
+          url: `${BASE_URL}/app/`,
           reuseExistingServer: !IS_CI,
-          timeout: 120_000,
+          timeout: 180_000,
         },
       }),
 });

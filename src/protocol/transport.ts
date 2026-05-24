@@ -244,8 +244,9 @@ export class WebRTCTransport extends BaseTransport {
     // offer so the SDP includes the m=application section.
     const dc = pc.createDataChannel('chepherd-rc-v1', {
       ordered: true,
-      // Reliability matters — log + verdict frames cannot drop.
-      maxRetransmits: undefined,
+      // Reliability matters — log + verdict frames cannot drop. Omit
+      // maxRetransmits entirely (default = reliable). exactOptional
+      // PropertyTypes rejects explicit `undefined` for optional fields.
       negotiated: false,
     });
     this.#dc = dc;

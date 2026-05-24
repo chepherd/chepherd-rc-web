@@ -42,9 +42,13 @@ export async function initObservability(cfg?: Partial<ObsConfig>): Promise<void>
     otelEndpoint?: string;
   };
   const merged: ObsConfig = {
-    sentryDsn: cfg?.sentryDsn ?? runtime.sentryDsn,
-    otelEndpoint: cfg?.otelEndpoint ?? runtime.otelEndpoint,
     release: cfg?.release ?? `chepherd-rc-web@${getBuildVersion()}`,
+    ...(cfg?.sentryDsn ?? runtime.sentryDsn
+      ? { sentryDsn: cfg?.sentryDsn ?? runtime.sentryDsn }
+      : {}),
+    ...(cfg?.otelEndpoint ?? runtime.otelEndpoint
+      ? { otelEndpoint: cfg?.otelEndpoint ?? runtime.otelEndpoint }
+      : {}),
   };
 
   if (merged.sentryDsn) {

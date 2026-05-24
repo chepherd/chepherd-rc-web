@@ -95,6 +95,10 @@ function getBuildVersion(): string {
 async function loadSentry(cfg: ObsConfig): Promise<void> {
   try {
     // Dynamic import so Sentry doesn't bloat first-paint when DSN absent.
+    // Optional SDK — not in dependencies; tsc + astro-check skip the
+    // resolution path via @ts-expect-error since the import is gated
+    // on cfg.sentryDsn being present at runtime.
+    // @ts-expect-error optional peer dep loaded lazily
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Sentry = (await import(/* @vite-ignore */ '@sentry/browser')) as any;
     Sentry.init({
@@ -130,12 +134,19 @@ async function loadSentry(cfg: ObsConfig): Promise<void> {
 
 async function loadOtel(cfg: ObsConfig): Promise<void> {
   try {
+    // Optional OTel SDKs — not in package dependencies. Loaded lazily
+    // only when cfg.otelEndpoint is set, so astro-check shouldn't fail
+    // on missing module resolution.
+    // @ts-expect-error optional peer dep loaded lazily
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sdk = (await import(/* @vite-ignore */ '@opentelemetry/sdk-trace-web')) as any;
+    // @ts-expect-error optional peer dep loaded lazily
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exp = (await import(/* @vite-ignore */ '@opentelemetry/exporter-trace-otlp-http')) as any;
+    // @ts-expect-error optional peer dep loaded lazily
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = (await import(/* @vite-ignore */ '@opentelemetry/resources')) as any;
+    // @ts-expect-error optional peer dep loaded lazily
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sem = (await import(/* @vite-ignore */ '@opentelemetry/semantic-conventions')) as any;
 

@@ -99,7 +99,7 @@ export async function completeLogin(cfg: AuthConfig): Promise<TokenSet> {
     access_token: tok.access_token,
     refresh_token: tok.refresh_token,
     expires_at: Math.floor(Date.now() / 1000) + tok.expires_in - 30,
-    id_token: tok.id_token,
+    ...(tok.id_token !== undefined ? { id_token: tok.id_token } : {}),
   };
   sessionStorage.setItem(SS_TOKENS, JSON.stringify(tokens));
   sessionStorage.removeItem(SS_VERIFIER);
@@ -150,7 +150,7 @@ export async function getValidAccessToken(
     access_token: fresh.access_token,
     refresh_token: fresh.refresh_token,
     expires_at: Math.floor(Date.now() / 1000) + fresh.expires_in - 30,
-    id_token: fresh.id_token,
+    ...(fresh.id_token !== undefined ? { id_token: fresh.id_token } : {}),
   };
   sessionStorage.setItem(SS_TOKENS, JSON.stringify(updated));
   return updated.access_token;
